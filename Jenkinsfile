@@ -17,3 +17,4 @@ node {
         docker push 146710/sam_build:dindsample_${BUILD_NUMBER}'''
     }
 }
+
