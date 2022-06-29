@@ -10,7 +10,7 @@ node {
         sh '''echo "Docker user id - "${docker_id}
         echo "docker password-" ${docker_password}
         
-        docker login -u ${docker_id} -p ${docker_password}
+        docker login -u ${docker_login} -p ${docker_password}
         
         docker build -t 146710/sam_build:dindsample_${BUILD_NUMBER} .
         
