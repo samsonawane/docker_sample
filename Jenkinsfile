@@ -1,22 +1,19 @@
-pipeline {
-    options {
-        timeout(time: 1, unit: 'HOURS')
+node {
+    stage('Checkout_repo') {
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/samsonawane/docker_sample.git']]])
     }
-    agent {
-        label 'ubuntu-1804 && amd64 && docker'
+    stage ('build')
+    {
+        withCredentials([usernamePassword(credentialsId: 'docker_login', passwordVariable: 'docker_password', usernameVariable: 'docker_id')]) {
+    // some block
     }
-    stages {
-        stage('build and push') {
-            when {
-                branch 'master'
-            }
-            sh "docker build -t docker/getting-started ."
-
-            steps {
-                withDockerRegistry([url: "", credentialsId: "dockerbuildbot-index.docker.io"]) {
-                    sh("docker push docker/getting-started")
-                }
-            }
-        }
+        sh '''echo "Docker user id - "${docker_id}
+        echo "docker password-" ${docker_password}
+        
+        docker login -u ${docker_id} -p ${docker_password}
+        
+        docker build -t 146710/sam_build:dindsample_${BUILD_NUMBER} .
+        
+        docker push 146710/sam_build:dindsample_${BUILD_NUMBER}'''
     }
 }
